@@ -15,14 +15,13 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       font-family: 'Poppins', sans-serif;
       color: #fff;
       overflow-x: hidden;
       background-color: #000;
     }
-
+    /* Background video styling */
     #bg-video {
       position: fixed;
       top: 0;
@@ -33,7 +32,12 @@
       z-index: -1;
       opacity: 0.15;
     }
-
+    /* Ensure all content is above the video */
+    body > *:not(video) {
+      position: relative;
+      z-index: 1;
+    }
+    /* Header styling */
     header {
       padding: 20px 30px;
       display: flex;
@@ -46,7 +50,6 @@
       background-color: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(4px);
     }
-
     .logo {
       font-size: 24px;
       font-weight: 700;
@@ -56,16 +59,13 @@
       -webkit-text-fill-color: transparent;
       transition: transform 0.3s ease;
     }
-
     .logo:hover {
       transform: scale(1.1);
     }
-
     nav {
       display: flex;
       gap: 25px;
     }
-
     nav a {
       text-decoration: none;
       color: #ccc;
@@ -73,45 +73,14 @@
       transition: color 0.3s ease;
       text-transform: capitalize;
     }
-
     nav a:hover {
       color: #fff;
     }
-
-    .menu-toggle {
-      display: none;
-      font-size: 24px;
-      color: white;
-      cursor: pointer;
-    }
-
-    .mobile-nav {
-      display: none;
-      flex-direction: column;
-      background: rgba(0, 0, 0, 0.9);
-      position: absolute;
-      top: 70px;
-      right: 30px;
-      border-radius: 10px;
-      padding: 10px 20px;
-      z-index: 1001;
-    }
-
-    .mobile-nav a {
-      margin: 10px 0;
-      color: #ccc;
-      text-decoration: none;
-    }
-
-    .mobile-nav a:hover {
-      color: #00ffff;
-    }
-
+    /* Main content styling */
     main {
       padding-top: 140px;
       text-align: center;
     }
-
     .hero h1 {
       font-size: 48px;
       font-weight: bold;
@@ -120,14 +89,12 @@
       -webkit-text-fill-color: transparent;
       margin-bottom: 20px;
     }
-
     .hero p {
       font-size: 18px;
       color: #ccc;
       max-width: 700px;
       margin: 0 auto 40px;
     }
-
     .btn-primary {
       padding: 14px 28px;
       font-size: 18px;
@@ -139,11 +106,10 @@
       box-shadow: 0px 4px 10px rgba(0, 255, 255, 0.3);
       transition: transform 0.3s ease-in-out;
     }
-
     .btn-primary:hover {
       transform: scale(1.05);
     }
-
+    /* Social icons */
     .social-icons {
       position: fixed;
       bottom: 15px;
@@ -156,34 +122,99 @@
       border-radius: 10px;
       z-index: 1000;
     }
-
     .social-icons a {
       text-decoration: none;
       font-size: 22px;
       color: #ffffff;
       opacity: 0.8;
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      transition: transform 0.3s ease, opacity 0.3s ease, color 0.3s ease;
     }
-
     .social-icons a:hover {
       opacity: 1;
       transform: translateY(-5px) scale(1.2);
       color: #00ffff;
     }
-
+    /* Modal styling */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding-top: 100px;
+    }
+    .modal-content {
+      background-color: #111;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #444;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .modal-content h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .modal-content a {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: linear-gradient(90deg, #0044ff, #00ffff);
+      color: #000;
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 8px;
+      transition: transform 0.3s;
+    }
+    .modal-content a:hover {
+      transform: scale(1.05);
+    }
+    .close-modal {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close-modal:hover {
+      color: #fff;
+    }
+    /* Responsive adjustments */
     @media (max-width: 768px) {
       nav {
         display: none;
       }
-
       .menu-toggle {
         display: block;
+        font-size: 24px;
+        color: #fff;
+        cursor: pointer;
       }
-
-      .mobile-nav.active {
-        display: flex;
+      .mobile-nav {
+        display: none;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.9);
+        position: absolute;
+        top: 70px;
+        right: 30px;
+        border-radius: 10px;
+        padding: 10px 20px;
+        z-index: 1001;
       }
-
+      .mobile-nav a {
+        margin: 10px 0;
+        color: #ccc;
+        text-decoration: none;
+      }
+      .mobile-nav a:hover {
+        color: #00ffff;
+      }
       .hero h1 {
         font-size: 32px;
       }
@@ -191,7 +222,6 @@
   </style>
 </head>
 <body>
-
   <!-- Background Video -->
   <video autoplay muted loop playsinline id="bg-video">
     <source src="background.mp4" type="video/mp4" />
@@ -201,18 +231,19 @@
   <!-- Header -->
   <header>
     <div class="logo">SHIZAIRO NETWORK</div>
-
-    <div class="menu-toggle" onclick="toggleMenu()">
+    
+    <div class="menu-toggle" onclick="toggleMobileNav()">
       <i class="fas fa-bars"></i>
     </div>
-
+    
     <nav>
       <a href="#">Home</a>
       <a href="#">MC Resources</a>
       <a href="#">Support</a>
       <a href="#">About</a>
     </nav>
-
+    
+    <!-- Mobile Navigation -->
     <div class="mobile-nav" id="mobileNav">
       <a href="#">Home</a>
       <a href="#">MC Resources</a>
@@ -226,22 +257,53 @@
     <section class="hero">
       <h1>Build Smarter. Play Better.</h1>
       <p>Your home for premium Minecraft texture packs, tools, and powerful content for the Shizairo community.</p>
-      <button class="btn-primary" onclick="window.location.href='mc-resources.html'">Get Started</button>
+      <!-- When Get Started is clicked, open modal -->
+      <button class="btn-primary" onclick="openModal()">Get Started</button>
     </section>
   </main>
 
   <!-- Social Icons -->
   <div class="social-icons">
-    <a href="#"><i class="fab fa-github"></i></a>
-    <a href="#"><i class="fab fa-discord"></i></a>
-    <a href="#"><i class="fab fa-youtube"></i></a>
-    <a href="#"><i class="fab fa-twitter"></i></a>
+    <a href="https://github.com/yourprofile" target="_blank"><i class="fab fa-github"></i></a>
+    <a href="https://discord.com/yourprofile" target="_blank"><i class="fab fa-discord"></i></a>
+    <a href="https://youtube.com/yourprofile" target="_blank"><i class="fab fa-youtube"></i></a>
+    <a href="https://twitter.com/yourprofile" target="_blank"><i class="fab fa-twitter"></i></a>
   </div>
 
-  <!-- Mobile Menu Toggle Script -->
+  <!-- Modal -->
+  <div class="modal" id="pageModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h2>Select a Page</h2>
+      <a href="mc-resources.html">MC Resources</a>
+      <a href="support.html">Support</a>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script>
-    function toggleMenu() {
-      document.getElementById('mobileNav').classList.toggle('active');
+    function openModal() {
+      document.getElementById("pageModal").style.display = "block";
+    }
+    function closeModal() {
+      document.getElementById("pageModal").style.display = "none";
+    }
+    // Mobile navigation toggle
+    function toggleMobileNav() {
+      var mobileNav = document.getElementById("mobileNav");
+      if(mobileNav.style.display === "flex") {
+        mobileNav.style.display = "none";
+      } else {
+        mobileNav.style.display = "flex";
+      }
+    }
+    // Close modal if user clicks outside modal content
+    window.onclick = function(event) {
+      var modal = document.getElementById("pageModal");
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
     }
   </script>
 
