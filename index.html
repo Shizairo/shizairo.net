@@ -34,6 +34,12 @@
       opacity: 0.15;
     }
 
+    /* ✅ Fix content being hidden behind video */
+    body > *:not(video) {
+      position: relative;
+      z-index: 1;
+    }
+
     header {
       padding: 20px 40px;
       display: flex;
@@ -149,9 +155,9 @@
 </head>
 <body>
 
-  <!-- Background Video -->
+  <!-- ✅ Background Video -->
   <video autoplay muted loop playsinline id="bg-video">
-    <source src="your-video.mp4" type="video/mp4" />
+    <source src="background.mp4" type="video/mp4" />
     Your browser does not support HTML5 video.
   </video>
 
@@ -166,7 +172,7 @@
     </nav>
   </header>
 
-  <!-- Main Hero -->
+  <!-- Hero -->
   <main>
     <section class="hero">
       <h1>Build Smarter. Play Better.</h1>
@@ -185,17 +191,3 @@
 
 </body>
 </html>
- 
-  <!-- Background Video -->
-  <video autoplay muted loop playsinline id="bg-video">
-    <source src="background.mp4" type="video/mp4" />
-    Your browser does not support HTML5 video.
-  </video>
-
-  <!-- Navbar -->
-  <header>
-    ...
-  </header>
-
-
-
