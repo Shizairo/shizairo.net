@@ -6,7 +6,7 @@
   <title>Shizairo Network</title>
 
   <!-- Fonts + Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 
   <style>
@@ -17,13 +17,12 @@
     }
 
     body {
-      font-family: 'Orbitron', sans-serif;
-      background-color: #000;
+      font-family: 'Poppins', sans-serif;
       color: #fff;
       overflow-x: hidden;
+      background-color: #000;
     }
 
-    /* Background Video */
     #bg-video {
       position: fixed;
       top: 0;
@@ -35,46 +34,35 @@
       opacity: 0.15;
     }
 
-    /* Header */
     header {
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
       padding: 20px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(6px);
+      position: fixed;
+      width: 100%;
+      top: 0;
       z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
     }
 
     .logo {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 700;
       background: linear-gradient(90deg, #00ffff, #ff00ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: pulseGlow 2s infinite ease-in-out;
-      text-shadow: 0 0 10px rgba(0,255,255,0.3);
+      animation: pulse 2s infinite;
     }
 
-    @keyframes pulseGlow {
-      0%, 100% {
-        text-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
-      }
-      50% {
-        text-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff;
-      }
-    }
-
-    nav {
-      display: flex;
-      gap: 25px;
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
     }
 
     nav a {
+      margin-left: 25px;
       text-decoration: none;
       color: #ccc;
       font-weight: 500;
@@ -82,7 +70,7 @@
     }
 
     nav a:hover {
-      color: #00ffff;
+      color: #fff;
     }
 
     main {
@@ -149,24 +137,12 @@
     }
 
     @media (max-width: 768px) {
-      nav {
-        flex-direction: column;
-        gap: 10px;
-        background-color: rgba(0, 0, 0, 0.9);
-        position: absolute;
-        top: 80px;
-        right: 20px;
-        padding: 15px;
-        border-radius: 8px;
-        display: none; /* future dropdown */
-      }
-
       .hero h1 {
         font-size: 32px;
       }
 
-      .logo {
-        font-size: 22px;
+      nav {
+        display: none;
       }
     }
   </style>
@@ -179,18 +155,18 @@
     Your browser does not support HTML5 video.
   </video>
 
-  <!-- Header -->
+  <!-- Navbar -->
   <header>
     <div class="logo">Shizairo Network</div>
     <nav>
       <a href="#">Home</a>
       <a href="#">MC Resources</a>
       <a href="#">About</a>
-      <a href="#">Support</a>
+      <a href="#">Contact</a>
     </nav>
   </header>
 
-  <!-- Main Section -->
+  <!-- Main Hero -->
   <main>
     <section class="hero">
       <h1>Build Smarter. Play Better.</h1>
@@ -209,4 +185,3 @@
 
 </body>
 </html>
-
