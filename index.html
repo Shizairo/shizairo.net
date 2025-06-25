@@ -34,13 +34,8 @@
       opacity: 0.15;
     }
 
-    body > *:not(video) {
-      position: relative;
-      z-index: 1;
-    }
-
     header {
-      padding: 20px 40px;
+      padding: 20px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -66,8 +61,12 @@
       transform: scale(1.1);
     }
 
+    nav {
+      display: flex;
+      gap: 25px;
+    }
+
     nav a {
-      margin-left: 25px;
       text-decoration: none;
       color: #ccc;
       font-weight: 500;
@@ -77,6 +76,35 @@
 
     nav a:hover {
       color: #fff;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.9);
+      position: absolute;
+      top: 70px;
+      right: 30px;
+      border-radius: 10px;
+      padding: 10px 20px;
+      z-index: 1001;
+    }
+
+    .mobile-nav a {
+      margin: 10px 0;
+      color: #ccc;
+      text-decoration: none;
+    }
+
+    .mobile-nav a:hover {
+      color: #00ffff;
     }
 
     main {
@@ -134,22 +162,30 @@
       font-size: 22px;
       color: #ffffff;
       opacity: 0.8;
-      transition: transform 0.3s ease, opacity 0.3s ease, color 0.3s ease;
+      transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
     .social-icons a:hover {
       opacity: 1;
-      color: #00ffff;
       transform: translateY(-5px) scale(1.2);
+      color: #00ffff;
     }
 
     @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 32px;
-      }
-
       nav {
         display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .mobile-nav.active {
+        display: flex;
+      }
+
+      .hero h1 {
+        font-size: 32px;
       }
     }
   </style>
@@ -162,18 +198,30 @@
     Your browser does not support HTML5 video.
   </video>
 
-  <!-- Navbar -->
+  <!-- Header -->
   <header>
     <div class="logo">SHIZAIRO NETWORK</div>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </div>
+
     <nav>
       <a href="#">Home</a>
-      <a href="#">Mc Resources</a>
+      <a href="#">MC Resources</a>
       <a href="#">Support</a>
       <a href="#">About</a>
     </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#">Home</a>
+      <a href="#">MC Resources</a>
+      <a href="#">Support</a>
+      <a href="#">About</a>
+    </div>
   </header>
 
-  <!-- Main Hero -->
+  <!-- Main Content -->
   <main>
     <section class="hero">
       <h1>Build Smarter. Play Better.</h1>
@@ -184,11 +232,18 @@
 
   <!-- Social Icons -->
   <div class="social-icons">
-    <a href="https://github.com/yourprofile" target="_blank"><i class="fab fa-github"></i></a>
-    <a href="https://discord.com/yourprofile" target="_blank"><i class="fab fa-discord"></i></a>
-    <a href="https://youtube.com/yourprofile" target="_blank"><i class="fab fa-youtube"></i></a>
-    <a href="https://twitter.com/yourprofile" target="_blank"><i class="fab fa-twitter"></i></a>
+    <a href="#"><i class="fab fa-github"></i></a>
+    <a href="#"><i class="fab fa-discord"></i></a>
+    <a href="#"><i class="fab fa-youtube"></i></a>
+    <a href="#"><i class="fab fa-twitter"></i></a>
   </div>
+
+  <!-- Mobile Menu Toggle Script -->
+  <script>
+    function toggleMenu() {
+      document.getElementById('mobileNav').classList.toggle('active');
+    }
+  </script>
 
 </body>
 </html>
