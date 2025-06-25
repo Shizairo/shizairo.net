@@ -138,11 +138,11 @@
     }
 
     .social-icons a::after {
-      content: attr(title);
+      content: attr(data-tooltip);
       position: absolute;
-      bottom: 125%;
+      bottom: 130%;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) scale(0.9);
       background: #222;
       color: #fff;
       padding: 4px 8px;
@@ -150,12 +150,13 @@
       font-size: 12px;
       white-space: nowrap;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: all 0.3s ease-in-out;
       pointer-events: none;
     }
 
     .social-icons a:hover::after {
       opacity: 1;
+      transform: translateX(-50%) scale(1);
     }
 
     @media (max-width: 768px) {
@@ -260,7 +261,7 @@
   <header>
     <div class="logo">Shizairo Network</div>
     <nav>
-      <a href="contact.html">Contact</a>
+      <a href="content.html">Content</a>
       <a href="mc-resources.html">Mc Resources</a>
       <a href="support.html">Support</a>
       <a href="about.html">About</a>
@@ -283,6 +284,7 @@
       <span class="close-modal" onclick="closeModal()">&times;</span>
       <h2>Choose where you'd like to go next</h2>
       <p class="modal-subtext">Select a section to continue your journey on <strong>SHIZAIRO NETWORK</strong>.</p>
+      <a href="content.html">Content</a>
       <a href="mc-resources.html">Mc Resources</a>
       <a href="support.html">Support</a>
       <a href="about.html">About</a>
@@ -291,10 +293,10 @@
 
   <!-- Social Icons -->
   <div class="social-icons">
-    <a href="https://github.com/yourprofile" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-    <a href="https://discord.com/yourprofile" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
-    <a href="https://youtube.com/yourprofile" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
-    <a href="https://twitter.com/yourprofile" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+    <a href="https://github.com/yourprofile" target="_blank" data-tooltip="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://discord.com/yourprofile" target="_blank" data-tooltip="Discord"><i class="fab fa-discord"></i></a>
+    <a href="https://youtube.com/yourprofile" target="_blank" data-tooltip="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://twitter.com/yourprofile" target="_blank" data-tooltip="Twitter"><i class="fab fa-twitter"></i></a>
   </div>
 
   <!-- Scripts -->
