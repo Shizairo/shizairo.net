@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shizairo Network</title>
+  <title>SHIZAIRO NETWORK</title>
 
   <!-- Fonts + Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet"/>
@@ -34,7 +34,6 @@
       opacity: 0.15;
     }
 
-    /* ✅ Fix content being hidden behind video */
     body > *:not(video) {
       position: relative;
       z-index: 1;
@@ -56,15 +55,15 @@
     .logo {
       font-size: 24px;
       font-weight: 700;
+      text-transform: uppercase;
       background: linear-gradient(90deg, #00ffff, #ff00ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: pulse 2s infinite;
+      transition: transform 0.3s ease;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
+    .logo:hover {
+      transform: scale(1.1);
     }
 
     nav a {
@@ -73,6 +72,7 @@
       color: #ccc;
       font-weight: 500;
       transition: color 0.3s ease;
+      text-transform: capitalize;
     }
 
     nav a:hover {
@@ -134,12 +134,13 @@
       font-size: 22px;
       color: #ffffff;
       opacity: 0.8;
-      transition: 0.3s ease-in-out;
+      transition: transform 0.3s ease, opacity 0.3s ease, color 0.3s ease;
     }
 
     .social-icons a:hover {
       opacity: 1;
       color: #00ffff;
+      transform: translateY(-5px) scale(1.2);
     }
 
     @media (max-width: 768px) {
@@ -155,7 +156,7 @@
 </head>
 <body>
 
-  <!-- ✅ Background Video -->
+  <!-- Background Video -->
   <video autoplay muted loop playsinline id="bg-video">
     <source src="background.mp4" type="video/mp4" />
     Your browser does not support HTML5 video.
@@ -163,16 +164,16 @@
 
   <!-- Navbar -->
   <header>
-    <div class="logo">Shizairo Network</div>
+    <div class="logo">SHIZAIRO NETWORK</div>
     <nav>
       <a href="#">Home</a>
       <a href="#">MC Resources</a>
+      <a href="#">Support</a>
       <a href="#">About</a>
-      <a href="#">Contact</a>
     </nav>
   </header>
 
-  <!-- Hero -->
+  <!-- Main Hero -->
   <main>
     <section class="hero">
       <h1>Build Smarter. Play Better.</h1>
