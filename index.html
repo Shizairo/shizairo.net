@@ -35,7 +35,7 @@
     }
 
     header {
-      padding: 20px 40px;
+      padding: 15px 25px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -48,16 +48,18 @@
     }
 
     .logo {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
+      text-transform: uppercase;
       background: linear-gradient(90deg, #00ffff, #ff00ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       transition: transform 0.3s ease;
+      margin-left: 5px;
     }
 
     .logo:hover {
-      transform: scale(1.08);
+      transform: scale(1.05);
     }
 
     nav a {
@@ -80,7 +82,7 @@
     .hero h1 {
       font-size: 48px;
       font-weight: bold;
-      background: linear-gradient(90deg, #ff00ff, #00ffff);
+      background: linear-gradient(90deg, #00bfff, #ff69b4);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 20px;
@@ -166,61 +168,89 @@
       nav {
         display: none;
       }
+
+      .logo {
+        font-size: 18px;
+        margin-left: 10px;
+      }
     }
 
-    /* Popup Modal */
-    .popup-overlay {
+    /* Modal Styling */
+    .modal {
+      display: none;
       position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .modal-overlay {
+      background-color: rgba(0, 0, 0, 0.8);
+      width: 100%;
+      height: 100%;
+      position: absolute;
       top: 0;
       left: 0;
-      height: 100%;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.75);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
     }
 
-    .popup-content {
-      background: #111;
-      padding: 30px 40px;
-      border-radius: 15px;
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #111;
+      padding: 30px 20px;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 12px;
       text-align: center;
+      border: 1px solid #444;
       box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      z-index: 2001;
     }
 
-    .popup-content h2 {
-      margin-bottom: 20px;
+    .modal-content h2 {
       font-size: 22px;
       color: #00ffff;
+      margin-bottom: 10px;
     }
 
-    .popup-buttons button {
-      margin: 10px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #00ffff, #0044ff);
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .popup-buttons button:hover {
-      transform: scale(1.05);
-      background: linear-gradient(90deg, #0044ff, #00ffff);
-    }
-
-    .close-btn {
-      margin-top: 20px;
-      color: #888;
+    .modal-subtext {
       font-size: 14px;
-      cursor: pointer;
+      color: #aaa;
+      margin-bottom: 25px;
     }
 
-    .close-btn:hover {
+    .modal-content a {
+      display: block;
+      margin: 12px auto;
+      padding: 12px;
+      background: linear-gradient(90deg, #0044ff, #00ffff);
+      color: #000;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .modal-content a:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #00ffff, #0044ff);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 24px;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .close-modal:hover {
       color: #fff;
     }
   </style>
@@ -235,37 +265,35 @@
 
   <!-- Navbar -->
   <header>
-    <div class="logo">SHIZAIRO NETWORK</div>
+    <div class="logo">Shizairo Network</div>
     <nav>
-      <a href="#">Home</a>
-      <a href="#">Content</a>
-      <a href="#">MC Resources</a>
-      <a href="#">Support</a>
-      <a href="#">About</a>
+      <a href="content.html">Content</a>
+      <a href="mc-resources.html">Mc Resources</a>
+      <a href="support.html">Support</a>
+      <a href="about.html">About</a>
     </nav>
   </header>
 
   <!-- Main Hero -->
   <main>
     <section class="hero">
-      <h1 style="background: linear-gradient(90deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Build Smarter. Play Better.</h1>
-      <p>Your home for premium Minecraft texture packs, tools, and powerful content for the SHIZAIRO NETWORK community.</p>
-      <button class="btn-primary" onclick="openPopup()">Get Started</button>
+      <h1>Build Smarter. Play Better.</h1>
+      <p>Your home for premium Minecraft texture packs, tools, and powerful content for the Shizairo community.</p>
+      <button class="btn-primary" onclick="openModal()">Get Started</button>
     </section>
   </main>
 
-  <!-- Popup -->
-  <div class="popup-overlay" id="popup">
-    <div class="popup-content">
-      <h2>Select a section to continue your journey on <strong>SHIZAIRO NETWORK</strong>.</h2>
-      <p style="margin-bottom: 15px;">Choose where you'd like to go next:</p>
-      <div class="popup-buttons">
-        <button onclick="goTo('content.html')">Content</button>
-        <button onclick="goTo('mc-resources.html')">MC Resources</button>
-        <button onclick="goTo('support.html')">Support</button>
-        <button onclick="goTo('about.html')">About</button>
-      </div>
-      <div class="close-btn" onclick="closePopup()">Cancel</div>
+  <!-- Modal -->
+  <div class="modal" id="pageModal">
+    <div class="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h2>Choose where you'd like to go next</h2>
+      <p class="modal-subtext">Select a section to continue your journey on <strong>SHIZAIRO NETWORK</strong>.</p>
+      <a href="content.html">Content</a>
+      <a href="mc-resources.html">Mc Resources</a>
+      <a href="support.html">Support</a>
+      <a href="about.html">About</a>
     </div>
   </div>
 
@@ -277,18 +305,21 @@
     <a href="https://twitter.com/yourprofile" target="_blank" data-tooltip="Twitter"><i class="fab fa-twitter"></i></a>
   </div>
 
+  <!-- Scripts -->
   <script>
-    function openPopup() {
-      document.getElementById('popup').style.display = 'flex';
+    function openModal() {
+      document.getElementById("pageModal").style.display = "block";
     }
 
-    function closePopup() {
-      document.getElementById('popup').style.display = 'none';
+    function closeModal() {
+      document.getElementById("pageModal").style.display = "none";
     }
 
-    function goTo(page) {
-      window.location.href = page;
-    }
+    document.addEventListener('keydown', function(event) {
+      if (event.key === "Escape") {
+        closeModal();
+      }
+    });
   </script>
 
 </body>
