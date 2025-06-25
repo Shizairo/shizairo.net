@@ -81,7 +81,7 @@
     .hero h1 {
       font-size: 48px;
       font-weight: bold;
-      background: linear-gradient(90deg, #ff00ff, #00ffff);
+      background: linear-gradient(90deg, #00bfff, #ff69b4);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 20px;
@@ -129,11 +129,33 @@
       color: #ffffff;
       opacity: 0.8;
       transition: 0.3s ease-in-out;
+      position: relative;
     }
 
     .social-icons a:hover {
       opacity: 1;
       color: #00ffff;
+    }
+
+    .social-icons a::after {
+      content: attr(title);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .social-icons a:hover::after {
+      opacity: 1;
     }
 
     @media (max-width: 768px) {
@@ -238,8 +260,8 @@
   <header>
     <div class="logo">Shizairo Network</div>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="mc-resources.html">MC Resources</a>
+      <a href="contact.html">Contact</a>
+      <a href="mc-resources.html">Mc Resources</a>
       <a href="support.html">Support</a>
       <a href="about.html">About</a>
     </nav>
@@ -260,8 +282,8 @@
     <div class="modal-content">
       <span class="close-modal" onclick="closeModal()">&times;</span>
       <h2>Choose where you'd like to go next</h2>
-      <p class="modal-subtext">Select a section to continue your journey on Shizairo Network.</p>
-      <a href="mc-resources.html">MC Resources</a>
+      <p class="modal-subtext">Select a section to continue your journey on <strong>SHIZAIRO NETWORK</strong>.</p>
+      <a href="mc-resources.html">Mc Resources</a>
       <a href="support.html">Support</a>
       <a href="about.html">About</a>
     </div>
@@ -269,10 +291,10 @@
 
   <!-- Social Icons -->
   <div class="social-icons">
-    <a href="https://github.com/yourprofile" target="_blank"><i class="fab fa-github"></i></a>
-    <a href="https://discord.com/yourprofile" target="_blank"><i class="fab fa-discord"></i></a>
-    <a href="https://youtube.com/yourprofile" target="_blank"><i class="fab fa-youtube"></i></a>
-    <a href="https://twitter.com/yourprofile" target="_blank"><i class="fab fa-twitter"></i></a>
+    <a href="https://github.com/yourprofile" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://discord.com/yourprofile" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+    <a href="https://youtube.com/yourprofile" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://twitter.com/yourprofile" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
   </div>
 
   <!-- Scripts -->
@@ -294,4 +316,3 @@
 
 </body>
 </html>
-
