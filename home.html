@@ -19,16 +19,16 @@
     body {
       font-family: 'Poppins', sans-serif;
       color: #fff;
-      overflow-x: hidden;
       background-color: #000;
+      overflow-x: hidden;
     }
 
     #bg-video {
       position: fixed;
       top: 0;
       left: 0;
-      min-width: 100%;
-      min-height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       z-index: -1;
       opacity: 0.15;
@@ -55,7 +55,6 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       transition: transform 0.3s ease;
-      margin-left: 5px;
     }
 
     .logo:hover {
@@ -171,7 +170,6 @@
 
       .logo {
         font-size: 18px;
-        margin-left: 10px;
       }
     }
 
@@ -180,19 +178,13 @@
       display: none;
       position: fixed;
       z-index: 2000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
     }
 
     .modal-overlay {
       background-color: rgba(0, 0, 0, 0.8);
-      width: 100%;
-      height: 100%;
       position: absolute;
-      top: 0;
-      left: 0;
+      inset: 0;
     }
 
     .modal-content {
@@ -208,7 +200,6 @@
       text-align: center;
       border: 1px solid #444;
       box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-      z-index: 2001;
     }
 
     .modal-content h2 {
@@ -258,15 +249,15 @@
 <body>
 
   <!-- Background Video -->
-  <video autoplay muted loop playsinline id="bg-video">
+  <video autoplay muted loop playsinline id="bg-video" aria-hidden="true">
     <source src="background.mp4" type="video/mp4" />
     Your browser does not support HTML5 video.
   </video>
 
   <!-- Navbar -->
-  <header>
+  <header role="banner">
     <div class="logo">Shizairo Network</div>
-    <nav>
+    <nav role="navigation" aria-label="Main Navigation">
       <a href="content.html">Content</a>
       <a href="mc-resources.html">Mc Resources</a>
       <a href="support.html">Support</a>
@@ -275,20 +266,20 @@
   </header>
 
   <!-- Main Hero -->
-  <main>
+  <main role="main">
     <section class="hero">
       <h1>Build Smarter. Play Better.</h1>
       <p>Your home for premium Minecraft texture packs, tools, and powerful content for the Shizairo community.</p>
-      <button class="btn-primary" onclick="openModal()">Get Started</button>
+      <button class="btn-primary" onclick="openModal()" aria-haspopup="dialog" aria-controls="pageModal">Get Started</button>
     </section>
   </main>
 
   <!-- Modal -->
-  <div class="modal" id="pageModal">
+  <div class="modal" id="pageModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-overlay" onclick="closeModal()"></div>
     <div class="modal-content">
-      <span class="close-modal" onclick="closeModal()">&times;</span>
-      <h2>Choose where you'd like to go next</h2>
+      <span class="close-modal" onclick="closeModal()" aria-label="Close modal">&times;</span>
+      <h2 id="modalTitle">Choose where you'd like to go next</h2>
       <p class="modal-subtext">Select a section to continue your journey on <strong>SHIZAIRO NETWORK</strong>.</p>
       <a href="content.html">Content</a>
       <a href="mc-resources.html">Mc Resources</a>
@@ -298,27 +289,28 @@
   </div>
 
   <!-- Social Icons -->
-  <div class="social-icons">
-    <a href="https://discord.gg/shizaironet" target="_blank" data-tooltip="Discord"><i class="fab fa-discord"></i></a>
-    <a href="https://www.youtube.com/@shizairo" target="_blank" data-tooltip="YouTube"><i class="fab fa-youtube"></i></a>
-    <a href="https://instagram.com/shizairo" target="_blank" data-tooltip="Instagram"><i class="fab fa-instagram"></i></a>
-    <a href="https://twitter.com/shizairo" target="_blank" data-tooltip="Twitter"><i class="fab fa-twitter"></i></a>
+  <div class="social-icons" role="contentinfo" aria-label="Social Media Links">
+    <a href="https://discord.gg/shizaironet" target="_blank" data-tooltip="Discord" aria-label="Discord"><i class="fab fa-discord"></i></a>
+    <a href="https://www.youtube.com/@shizairo" target="_blank" data-tooltip="YouTube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://instagram.com/shizairo" target="_blank" data-tooltip="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://twitter.com/shizairo" target="_blank" data-tooltip="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
   </div>
 
   <!-- Scripts -->
   <script>
+    const modal = document.getElementById("pageModal");
+
     function openModal() {
-      document.getElementById("pageModal").style.display = "block";
+      modal.style.display = "block";
+      modal.querySelector("a").focus(); // Accessibility focus
     }
 
     function closeModal() {
-      document.getElementById("pageModal").style.display = "none";
+      modal.style.display = "none";
     }
 
     document.addEventListener('keydown', function(event) {
-      if (event.key === "Escape") {
-        closeModal();
-      }
+      if (event.key === "Escape") closeModal();
     });
   </script>
 
