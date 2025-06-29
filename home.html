@@ -1,14 +1,4 @@
-Here’s your **updated `home.html`**, with the **navbar** and **“Get Started” modal** now linking only to:
-
-* **Content**
-* **Mc resources**
-* **Mc assets**
-* **Support**
-* **About**
-
-and **no Home link**. Also, “Mc” is capitalized and the rest in lowercase:
-
-```html
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,136 +11,147 @@ and **no Home link**. Also, “Mc” is capitalized and the rest in lowercase:
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: 'Poppins', sans-serif;
-      color: #fff;
-      background-color: #000;
-      overflow-x: hidden;
+      font-family:'Poppins',sans-serif;
+      color:#fff;
+      background:#000;
+      overflow-x:hidden;
     }
+
+    /* Video + Overlay */
     #bg-video {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover; z-index: -1; opacity: 0.15;
+      position:fixed; top:0; left:0;
+      width:100%; height:100%;
+      object-fit:cover; z-index:-2;
+      opacity:0.1;
     }
+    .video-overlay {
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.7);
+      z-index:-1;
+    }
+
+    /* Header */
     header {
-      padding: 15px 25px;
-      display: flex; justify-content: space-between; align-items: center;
-      position: fixed; top: 0; width: 100%; z-index: 1000;
-      background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+      padding:15px 25px;
+      display:flex; justify-content:space-between; align-items:center;
+      position:fixed; top:0; width:100%; z-index:1000;
+      background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
     }
     .logo {
-      font-size: 22px; font-weight: 700; text-transform: uppercase;
-      background: linear-gradient(90deg, #00ffff, #ff00ff);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      transition: transform 0.3s ease;
+      font-size:22px; font-weight:700; text-transform:uppercase;
+      background:linear-gradient(90deg, #00ffc8, #ff005e);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+      transition:transform 0.3s ease;
     }
-    .logo:hover { transform: scale(1.05); }
+    .logo:hover { transform:scale(1.05); }
+
+    /* Nav */
     nav a {
-      margin-left: 25px; text-decoration: none; color: #ccc;
-      font-weight: 500; transition: color 0.3s ease;
+      margin-left:25px; text-decoration:none; color:#ccc;
+      font-weight:500; transition:color 0.3s;
     }
-    nav a:hover { color: #fff; }
-    main { padding-top: 140px; text-align: center; }
+    nav a:hover { color:#fff; }
+
+    /* Hero */
+    main { padding-top:140px; text-align:center; }
     .hero h1 {
-      font-size: 48px; font-weight: bold;
-      background: linear-gradient(90deg, #00bfff, #ff69b4);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      margin-bottom: 20px;
+      font-size:48px; font-weight:bold;
+      background:linear-gradient(90deg, #00bfff, #ff69b4);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      margin-bottom:20px;
+      text-shadow:1px 1px 2px rgba(0,0,0,0.5);
     }
     .hero p {
-      font-size: 18px; color: #ccc;
-      max-width: 700px; margin: 0 auto 40px;
+      font-size:18px; color:#ccc;
+      max-width:700px; margin:0 auto 40px;
     }
     .btn-primary {
-      padding: 14px 28px; font-size: 18px;
-      background: linear-gradient(90deg, #0044ff, #00ffff);
-      color: #fff; border: none; border-radius: 10px;
-      cursor: pointer; box-shadow: 0 4px 10px rgba(0,255,255,0.3);
-      transition: transform 0.3s ease-in-out;
+      padding:14px 28px; font-size:18px;
+      background:linear-gradient(90deg,#0044ff,#00ffff);
+      color:#fff; border:none; border-radius:10px;
+      cursor:pointer; box-shadow:0 4px 10px rgba(0,255,255,0.3);
+      transition:transform 0.3s;
     }
-    .btn-primary:hover { transform: scale(1.05); }
+    .btn-primary:hover { transform:scale(1.05); }
 
+    /* Social Icons */
     .social-icons {
-      position: fixed; bottom: 15px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; gap: 15px;
-      background: rgba(0,0,0,0.6); padding: 10px 18px;
-      border-radius: 10px; z-index: 1000;
+      position:fixed; bottom:15px; left:50%;
+      transform:translateX(-50%);
+      display:flex; gap:15px;
+      background:rgba(0,0,0,0.6); padding:10px 18px;
+      border-radius:10px; z-index:1000;
     }
     .social-icons a {
-      text-decoration: none; font-size: 22px;
-      color: #fff; opacity: 0.8; position: relative;
-      transition: color 0.3s, opacity 0.3s;
+      text-decoration:none; font-size:22px; color:#fff;
+      opacity:0.8; position:relative; transition:color 0.3s, opacity 0.3s;
     }
-    .social-icons a:hover { color: #00ffff; opacity: 1; }
+    .social-icons a:hover { color:#00ffff; opacity:1; }
     .social-icons a::after {
-      content: attr(data-tooltip);
-      position: absolute; bottom: 130%; left: 50%;
-      transform: translateX(-50%) scale(0.9);
-      background: #222; color: #fff; padding: 4px 8px;
-      border-radius: 6px; font-size: 12px; white-space: nowrap;
-      opacity: 0; transition: all 0.3s ease-in-out;
-      pointer-events: none;
+      content:attr(data-tooltip);
+      position:absolute; bottom:130%; left:50%;
+      transform:translateX(-50%) scale(0.9);
+      background:#222; color:#fff; padding:4px 8px;
+      border-radius:6px; font-size:12px; white-space:nowrap;
+      opacity:0; transition:all 0.3s; pointer-events:none;
     }
     .social-icons a:hover::after {
-      opacity: 1; transform: translateX(-50%) scale(1);
+      opacity:1; transform:translateX(-50%) scale(1);
     }
 
-    @media (max-width: 768px) {
-      nav { display: none; }
-      .hero h1 { font-size: 32px; }
-      .logo { font-size: 18px; }
+    @media (max-width:768px) {
+      nav { display:none; }
+      .hero h1 { font-size:32px; }
+      .logo { font-size:18px; }
     }
 
     /* Modal */
-    .modal {
-      display: none; position: fixed; inset: 0; z-index: 2000;
-    }
+    .modal { display:none; position:fixed; inset:0; z-index:2000; }
     .modal-overlay {
-      position: absolute; inset: 0;
-      background: rgba(0,0,0,0.8);
+      position:absolute; inset:0; background:rgba(0,0,0,0.8);
     }
     .modal-content {
-      position: absolute; top:50%; left:50%;
-      transform: translate(-50%,-50%);
-      background: #111; padding: 30px 20px;
-      width: 90%; max-width: 400px;
-      border-radius: 12px; text-align: center;
-      border: 1px solid #444;
-      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      background:#111; padding:30px 20px;
+      width:90%; max-width:400px; border-radius:12px;
+      text-align:center; border:1px solid #444;
+      box-shadow:0 0 20px rgba(0,255,255,0.2);
     }
     .modal-content h2 {
-      font-size: 22px; color: #00ffff; margin-bottom: 10px;
+      font-size:22px; color:#00ffff; margin-bottom:10px;
     }
     .modal-subtext {
-      font-size: 14px; color: #aaa; margin-bottom: 25px;
+      font-size:14px; color:#aaa; margin-bottom:25px;
     }
     .modal-content a {
-      display: block; margin: 12px auto;
-      padding: 12px; background: linear-gradient(90deg,#0044ff,#00ffff);
-      color: #000; text-decoration: none;
-      font-weight:600; border-radius:8px;
-      transition: all 0.3s;
+      display:block; margin:12px auto;
+      padding:12px; background:linear-gradient(90deg,#0044ff,#00ffff);
+      color:#000; text-decoration:none; font-weight:600;
+      border-radius:8px; transition:all 0.3s;
     }
     .modal-content a:hover {
-      transform: scale(1.05);
-      background: linear-gradient(90deg,#00ffff,#0044ff);
+      transform:scale(1.05);
+      background:linear-gradient(90deg,#00ffff,#0044ff);
     }
     .close-modal {
-      position: absolute; top:12px; right:16px;
+      position:absolute; top:12px; right:16px;
       font-size:24px; color:#aaa; cursor:pointer;
-      transition: color 0.3s;
+      transition:color 0.3s;
     }
     .close-modal:hover { color:#fff; }
   </style>
 </head>
 <body>
 
-  <!-- Background Video -->
+  <!-- Background Video + Overlay -->
   <video autoplay muted loop playsinline id="bg-video" aria-hidden="true">
-    <source src="background.mp4" type="video/mp4" />
+    <source src="background.mp4" type="video/mp4"/>
   </video>
+  <div class="video-overlay"></div>
 
   <!-- Navbar -->
   <header role="banner">
@@ -196,12 +197,11 @@ and **no Home link**. Also, “Mc” is capitalized and the rest in lowercase:
     <a href="https://twitter.com/shizairo" target="_blank" data-tooltip="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
   </div>
 
-  <!-- Scripts -->
   <script>
-    const modal = document.getElementById("pageModal");
-    function openModal() { modal.style.display = "block"; }
-    function closeModal() { modal.style.display = "none"; }
-    document.addEventListener('keydown', event => { if (event.key === "Escape") closeModal(); });
+    const modal = document.getElementById('pageModal');
+    function openModal() { modal.style.display = 'block'; }
+    function closeModal() { modal.style.display = 'none'; }
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
   </script>
 
 </body>
