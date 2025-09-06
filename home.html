@@ -1,91 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shizairo Network | Server Status</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shizairo Network | Live Server Status</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
-    /* === RESET === */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body, html { height: 100%; width: 100%; font-family: "Poppins", sans-serif; background: #000; overflow: hidden; }
+    /* RESET */
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    body, html {
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      background: #000;
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
 
-    /* === BACKGROUND VIDEO === */
+    /* BACKGROUND VIDEO */
     video.bg-video {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       z-index: -2;
-      filter: brightness(0.4);
+      filter: brightness(0.35);
     }
 
-    /* === OVERLAY EFFECT === */
+    /* DARK OVERLAY */
     .overlay {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.5);
       z-index: -1;
     }
 
-    /* === STATUS CARD === */
+    /* MAIN STATUS CARD */
     .status-card {
-      background: rgba(20, 20, 20, 0.7);
-      backdrop-filter: blur(12px);
-      border-radius: 18px;
+      max-width: 700px;
+      margin: 60px auto;
       padding: 25px;
-      max-width: 650px;
-      margin: auto;
-      margin-top: 50px;
+      background: rgba(30, 30, 30, 0.55);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
       text-align: center;
-      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
-      color: #fff;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
       animation: fadeIn 1s ease-in-out;
     }
 
-    /* === TITLE === */
     .status-card h1 {
-      font-size: 34px;
+      font-size: 36px;
       font-weight: 800;
-      margin-bottom: 5px;
       background: linear-gradient(90deg, #00ffff, #ff00ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
     }
 
-    /* === BADGE === */
+    /* BADGES */
     .badge {
       display: inline-block;
-      padding: 8px 20px;
-      border-radius: 30px;
-      margin-top: 10px;
+      padding: 8px 22px;
+      border-radius: 20px;
+      margin-top: 8px;
       font-weight: bold;
       font-size: 14px;
-      letter-spacing: 0.5px;
     }
+    .online {background: rgba(16, 185, 129, 0.15); color: #10b981;}
+    .offline {background: rgba(239, 68, 68, 0.15); color: #ef4444;}
 
-    .online { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-    .offline { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-
-    /* === INFO === */
+    /* SERVER INFO */
     .info {
-      margin-top: 14px;
-      font-size: 15px;
       display: flex;
       justify-content: space-between;
+      margin-top: 14px;
+      font-size: 16px;
     }
 
-    /* === PLAYER SECTION === */
-    .player-section {
-      margin-top: 20px;
-      text-align: left;
-    }
-
+    /* PLAYER SECTION */
+    .player-section {margin-top: 20px; text-align: left;}
     .player-section h3 {
       font-size: 16px;
       color: #00ffff;
@@ -97,7 +93,7 @@
       padding: 0;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 10px;
+      gap: 12px;
     }
 
     .players li {
@@ -106,16 +102,16 @@
       gap: 8px;
       background: rgba(255, 255, 255, 0.05);
       padding: 6px 10px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 14px;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
     }
 
     .avatar {
       width: 32px;
       height: 32px;
       border-radius: 6px;
-      border: 1px solid #222;
+      border: 1px solid #333;
     }
 
     .muted {
@@ -125,10 +121,10 @@
       text-align: center;
     }
 
-    /* === DISCORD BUTTON === */
+    /* DISCORD BUTTON */
     .discord-btn {
       display: inline-block;
-      margin-top: 20px;
+      margin-top: 25px;
       background: #5865F2;
       color: #fff;
       padding: 12px 24px;
@@ -139,16 +135,15 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       transition: 0.3s ease-in-out;
     }
-
     .discord-btn:hover {
       background: #4752C4;
       transform: scale(1.05);
     }
 
-    /* === ANIMATION === */
+    /* FADE ANIMATION */
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
     }
   </style>
 </head>
@@ -156,7 +151,7 @@
 
   <!-- BACKGROUND VIDEO -->
   <video autoplay muted loop class="bg-video">
-    <source src="background.mp4" type="video/mp4" />
+    <source src="https://cdn.coverr.co/videos/coverr-gaming-lobby-9020/1080p.mp4" type="video/mp4">
   </video>
   <div class="overlay"></div>
 
@@ -203,7 +198,7 @@
         const ms = Math.round(performance.now() - start);
         const data = await res.json();
 
-        // Server Status
+        // STATUS
         if (data.online) {
           statusBadge.textContent = "ONLINE";
           statusBadge.className = "badge online";
@@ -217,14 +212,14 @@
         const maxPlayers = data.players?.max || 0;
         playersCountEl.textContent = `${onlinePlayers} / ${maxPlayers}`;
 
-        // Show Player List
+        // PLAYER LIST WITH UNIQUE AVATARS
         playerListEl.innerHTML = "";
         if (data.players?.list?.length) {
           data.players.list.forEach((name) => {
             const li = document.createElement("li");
             const img = document.createElement("img");
             img.className = "avatar";
-            img.src = `https://minotar.net/avatar/${encodeURIComponent(name)}/32`;
+            img.src = `https://mc-heads.net/avatar/${encodeURIComponent(name)}/32`; // FIXED UNIQUE LOGO
             li.appendChild(img);
 
             const span = document.createElement("span");
@@ -248,7 +243,7 @@
     }
 
     fetchStatus();
-    setInterval(fetchStatus, 15000); // Refresh every 15 seconds
+    setInterval(fetchStatus, 10000); // Refresh every 10 sec
   </script>
 </body>
 </html>
