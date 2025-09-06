@@ -6,8 +6,9 @@
   <title>Shizairo Network | Server Status</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <style>
+    /* === Base Styling === */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      margin: 0;
       font-family: "Poppins", sans-serif;
       background: #0b1220;
       color: #fff;
@@ -17,43 +18,40 @@
       height: 100vh;
     }
 
+    /* === Status Card === */
     .status-card {
       background: #111827;
-      padding: 20px;
+      padding: 25px;
       border-radius: 16px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
       text-align: center;
       width: 95%;
-      max-width: 450px;
+      max-width: 600px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .status-card h1 {
-      margin: 0;
-      font-size: 24px;
+      font-size: 28px;
+      margin-bottom: 8px;
       background: linear-gradient(90deg, #00ffff, #ff00ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
+    /* === Status Badge === */
     .badge {
       display: inline-block;
-      padding: 6px 14px;
+      padding: 8px 18px;
       border-radius: 999px;
-      margin-top: 10px;
+      margin-top: 5px;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 14px;
     }
 
-    .online {
-      background: rgba(16, 185, 129, 0.12);
-      color: #10b981;
-    }
+    .online { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .offline { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
 
-    .offline {
-      background: rgba(239, 68, 68, 0.12);
-      color: #ef4444;
-    }
-
+    /* === Server Info === */
     .info {
       margin-top: 14px;
       font-size: 15px;
@@ -61,35 +59,49 @@
       justify-content: space-between;
     }
 
+    /* === Player List Section === */
+    .player-section {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .player-section h3 {
+      font-size: 16px;
+      color: #00ffff;
+      margin-bottom: 8px;
+    }
+
     .players {
       list-style: none;
       padding: 0;
-      margin: 15px 0 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
     }
 
     .players li {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       background: rgba(255, 255, 255, 0.05);
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
     }
 
     .avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 4px;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid #222;
     }
 
     .muted {
-      color: #888;
+      color: #aaa;
       font-size: 14px;
+      grid-column: span 2;
+      text-align: center;
     }
   </style>
 </head>
@@ -97,6 +109,8 @@
   <div class="status-card">
     <h1>Shizairo Network</h1>
     <div id="statusBadge" class="badge">Checking...</div>
+
+    <!-- Server Info -->
     <div class="info">
       <span>IP: <strong>play.shizaironet.fun:25595</strong></span>
       <span id="ping">— ms</span>
@@ -105,9 +119,14 @@
       <span>Players: <span id="playersCount">0 / 0</span></span>
       <span>Version: <span id="version">—</span></span>
     </div>
-    <ul class="players" id="playerList">
-      <li class="muted">Fetching player list...</li>
-    </ul>
+
+    <!-- Player List -->
+    <div class="player-section">
+      <h3>Online Players</h3>
+      <ul class="players" id="playerList">
+        <li class="muted">Fetching players...</li>
+      </ul>
+    </div>
   </div>
 
   <script>
@@ -125,6 +144,7 @@
         const ms = Math.round(performance.now() - start);
         const data = await res.json();
 
+        // Set status
         if (data.online) {
           statusBadge.textContent = "ONLINE";
           statusBadge.className = "badge online";
@@ -133,22 +153,23 @@
           statusBadge.className = "badge offline";
         }
 
+        // Update info
         pingEl.textContent = ms + " ms";
         versionEl.textContent = data.version || "—";
         const onlinePlayers = data.players?.online || 0;
         const maxPlayers = data.players?.max || 0;
         playersCountEl.textContent = `${onlinePlayers} / ${maxPlayers}`;
 
+        // Show players list
         playerListEl.innerHTML = "";
         if (data.players?.list?.length) {
           data.players.list.forEach((name) => {
             const li = document.createElement("li");
             const img = document.createElement("img");
             img.className = "avatar";
-            img.src = `https://crafatar.com/avatars/${encodeURIComponent(name)}?size=28&overlay`;
+            img.src = `https://crafatar.com/avatars/${encodeURIComponent(name)}?size=32&overlay`;
             img.onerror = () => {
-              img.src =
-                "https://crafatar.com/avatars/00000000-0000-0000-0000-000000000000?size=28&overlay";
+              img.src = "https://crafatar.com/avatars/00000000-0000-0000-0000-000000000000?size=32&overlay";
             };
             li.appendChild(img);
             const span = document.createElement("span");
@@ -159,7 +180,7 @@
         } else {
           const li = document.createElement("li");
           li.className = "muted";
-          li.textContent = "No players online";
+          li.textContent = "No players online right now";
           playerListEl.appendChild(li);
         }
       } catch (err) {
@@ -168,13 +189,12 @@
         pingEl.textContent = "—";
         versionEl.textContent = "—";
         playersCountEl.textContent = "0 / 0";
-        playerListEl.innerHTML =
-          '<li class="muted">Unable to fetch player list</li>';
+        playerListEl.innerHTML = '<li class="muted">Unable to fetch player list</li>';
       }
     }
 
     fetchStatus();
-    setInterval(fetchStatus, 30000);
+    setInterval(fetchStatus, 20000); // Refresh every 20 seconds
   </script>
 </body>
 </html>
