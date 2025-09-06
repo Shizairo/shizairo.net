@@ -2,223 +2,179 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shizairo Network</title>
-
-  <!-- Fonts + Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shizairo Network | Server Status</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family:'Poppins',sans-serif;
-      color:#fff;
-      background:#000;
-      overflow-x:hidden;
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #0b1220;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
-    #bg-video {
-      position:fixed; top:0; left:0;
-      width:100%; height:100%;
-      object-fit:cover; z-index:-2; opacity:0.15;
+    .status-card {
+      background: #111827;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      width: 95%;
+      max-width: 450px;
     }
 
-    header {
-      padding:15px 25px;
-      display:flex; justify-content:space-between; align-items:center;
-      position:fixed; top:0; width:100%; z-index:1000;
-      background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
-    }
-    .logo {
-      font-size:24px; 
-      font-weight:800; 
-      background: linear-gradient(90deg, #00ffff 0%, #ff00ff 100%);
-      -webkit-background-clip:text; 
-      -webkit-text-fill-color:transparent;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.7);
-      transition:transform 0.3s ease;
-    }
-    .logo:hover { transform:scale(1.1); }
-
-    nav a {
-      margin-left:25px;
-      color:#ccc;
-      text-decoration:none;
-      font-weight:500;
-      transition:color 0.3s;
-    }
-    nav a:hover { color:#fff; }
-
-    main { padding-top:140px; text-align:center; }
-    .hero {
-      position: relative;
-      z-index: 1;
-      padding: 100px 20px;
-      background: rgba(0,0,0,0.4);
-      margin: 0 20px;
-      border-radius: 12px;
-    }
-    .hero h1 {
-      font-size:48px; 
-      background: linear-gradient(90deg, #00bfff, #ff69b4);
-      -webkit-background-clip:text; 
-      -webkit-text-fill-color:transparent;
-      margin-bottom:20px;
-      text-shadow:1px 1px 2px rgba(0,0,0,0.8);
-    }
-    .hero p {
-      font-size:18px; 
-      color:#ddd; 
-      max-width:700px;
-      margin:0 auto 40px;
-    }
-    .btn-primary {
-      padding:14px 28px;
-      font-size:18px;
-      background:linear-gradient(90deg,#0044ff,#00ffff);
-      border:none;
-      border-radius:10px;
-      color:#fff;
-      cursor:pointer;
-      box-shadow:0 4px 10px rgba(0,255,255,0.3);
-      transition:transform 0.3s ease;
-    }
-    .btn-primary:hover { transform:scale(1.05); }
-
-    .social-icons {
-      position:fixed; bottom:15px; left:50%;
-      transform:translateX(-50%);
-      display:flex; gap:15px;
-      background:rgba(0,0,0,0.6); padding:10px 18px;
-      border-radius:10px; z-index:1000;
-    }
-    .social-icons a {
-      color:#fff; opacity:0.8; font-size:22px;
-      position:relative; transition:opacity 0.3s, color 0.3s;
-    }
-    .social-icons a:hover { opacity:1; color:#00ffff; }
-    .social-icons a::after {
-      content:attr(data-tooltip);
-      position:absolute; bottom:130%; left:50%;
-      transform:translateX(-50%) scale(0.9);
-      background:#222; color:#fff;
-      padding:4px 8px; border-radius:6px;
-      font-size:12px; white-space:nowrap;
-      opacity:0; transition:all 0.3s;
-      pointer-events:none;
-    }
-    .social-icons a:hover::after {
-      opacity:1; transform:translateX(-50%) scale(1);
+    .status-card h1 {
+      margin: 0;
+      font-size: 24px;
+      background: linear-gradient(90deg, #00ffff, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    @media(max-width:768px){
-      nav { display:none; }
-      .hero { margin: 0 10px; padding: 80px 10px; }
-      .hero h1 { font-size:32px; }
-      .logo { font-size:20px; }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 13px;
     }
 
-    .modal {
-      display:none; position:fixed; inset:0; z-index:2000;
+    .online {
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
     }
-    .modal-overlay {
-      position:absolute; inset:0; background:rgba(0,0,0,0.8);
+
+    .offline {
+      background: rgba(239, 68, 68, 0.12);
+      color: #ef4444;
     }
-    .modal-content {
-      position:absolute; top:50%; left:50%;
-      transform:translate(-50%,-50%);
-      background:#111; padding:30px 20px;
-      width:90%; max-width:400px; border-radius:12px;
-      text-align:center; border:1px solid #444;
-      box-shadow:0 0 20px rgba(0,255,255,0.2);
+
+    .info {
+      margin-top: 14px;
+      font-size: 15px;
+      display: flex;
+      justify-content: space-between;
     }
-    .modal-content h2 {
-      font-size:22px; color:#00ffff; margin-bottom:10px;
+
+    .players {
+      list-style: none;
+      padding: 0;
+      margin: 15px 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
     }
-    .modal-subtext {
-      font-size:14px; color:#aaa; margin-bottom:25px;
+
+    .players li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 13px;
     }
-    .modal-content a {
-      display:block; margin:12px auto;
-      padding:12px; background:linear-gradient(90deg,#0044ff,#00ffff);
-      color:#000; text-decoration:none; font-weight:600;
-      border-radius:8px; transition:transform 0.3s;
+
+    .avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
     }
-    .modal-content a:hover {
-      transform:scale(1.05);
-      background:linear-gradient(90deg,#00ffff,#0044ff);
+
+    .muted {
+      color: #888;
+      font-size: 14px;
     }
-    .close-modal {
-      position:absolute; top:12px; right:16px;
-      font-size:24px; color:#aaa; cursor:pointer;
-      transition:color 0.3s;
-    }
-    .close-modal:hover { color:#fff; }
   </style>
 </head>
 <body>
-
-  <!-- Background Video -->
-  <video autoplay muted loop playsinline id="bg-video" aria-hidden="true">
-    <source src="background.mp4" type="video/mp4" />
-  </video>
-
-  <!-- Navbar -->
-  <header role="banner">
-    <div class="logo">Shizairo Network</div>
-    <nav role="navigation" aria-label="Main Navigation">
-      <a href="content.html">Content</a>
-      <a href="mc-resources.html">Mc resources</a>
-      <a href="mc-assets.html">Mc assets</a>
-      <a href="support.html">Support</a>
-      <a href="about.html">About</a>
-    </nav>
-  </header>
-
-  <!-- Main Hero -->
-  <main role="main">
-    <section class="hero">
-      <h1>Build Smarter. Play Better.</h1>
-      <p>Your home for premium Minecraft texture packs, tools, and powerful content for the Shizairo community.</p>
-      <button class="btn-primary" onclick="openModal()" aria-haspopup="dialog" aria-controls="pageModal">Get Started</button>
-    </section>
-  </main>
-
-  <!-- Modal -->
-  <div class="modal" id="pageModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-overlay" onclick="closeModal()"></div>
-    <div class="modal-content">
-      <span class="close-modal" onclick="closeModal()" aria-label="Close modal">&times;</span>
-      <h2 id="modalTitle">Choose where you'd like to go next</h2>
-      <p class="modal-subtext">Select a section to continue your journey on <strong>SHIZAIRO NETWORK</strong>.</p>
-      <a href="content.html">Content</a>
-      <a href="mc-resources.html">Mc resources</a>
-      <a href="mc-assets.html">Mc assets</a>
-      <a href="support.html">Support</a>
-      <a href="about.html">About</a>
+  <div class="status-card">
+    <h1>Shizairo Network</h1>
+    <div id="statusBadge" class="badge">Checking...</div>
+    <div class="info">
+      <span>IP: <strong>play.shizaironet.fun:25595</strong></span>
+      <span id="ping">— ms</span>
     </div>
+    <div class="info">
+      <span>Players: <span id="playersCount">0 / 0</span></span>
+      <span>Version: <span id="version">—</span></span>
+    </div>
+    <ul class="players" id="playerList">
+      <li class="muted">Fetching player list...</li>
+    </ul>
   </div>
 
-  <!-- Social Icons -->
-  <div class="social-icons" role="contentinfo" aria-label="Social Media Links">
-    <a href="https://discord.gg/shizaironet" target="_blank" data-tooltip="Discord" aria-label="Discord"><i class="fab fa-discord"></i></a>
-    <a href="https://www.youtube.com/@shizairo" target="_blank" data-tooltip="YouTube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-    <a href="https://instagram.com/shizairo" target="_blank" data-tooltip="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-    <a href="https://twitter.com/shizairo" target="_blank" data-tooltip="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-  </div>
-
-  <!-- Modal Script -->
   <script>
-    const modal = document.getElementById('pageModal');
-    function openModal() { modal.style.display = 'block'; }
-    function closeModal() { modal.style.display = 'none'; }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    const server = "play.shizaironet.fun:25595";
+    const statusBadge = document.getElementById("statusBadge");
+    const pingEl = document.getElementById("ping");
+    const playersCountEl = document.getElementById("playersCount");
+    const versionEl = document.getElementById("version");
+    const playerListEl = document.getElementById("playerList");
+
+    async function fetchStatus() {
+      try {
+        const start = performance.now();
+        const res = await fetch(`https://api.mcsrvstat.us/2/${server}`);
+        const ms = Math.round(performance.now() - start);
+        const data = await res.json();
+
+        if (data.online) {
+          statusBadge.textContent = "ONLINE";
+          statusBadge.className = "badge online";
+        } else {
+          statusBadge.textContent = "OFFLINE";
+          statusBadge.className = "badge offline";
+        }
+
+        pingEl.textContent = ms + " ms";
+        versionEl.textContent = data.version || "—";
+        const onlinePlayers = data.players?.online || 0;
+        const maxPlayers = data.players?.max || 0;
+        playersCountEl.textContent = `${onlinePlayers} / ${maxPlayers}`;
+
+        playerListEl.innerHTML = "";
+        if (data.players?.list?.length) {
+          data.players.list.forEach((name) => {
+            const li = document.createElement("li");
+            const img = document.createElement("img");
+            img.className = "avatar";
+            img.src = `https://crafatar.com/avatars/${encodeURIComponent(name)}?size=28&overlay`;
+            img.onerror = () => {
+              img.src =
+                "https://crafatar.com/avatars/00000000-0000-0000-0000-000000000000?size=28&overlay";
+            };
+            li.appendChild(img);
+            const span = document.createElement("span");
+            span.textContent = name;
+            li.appendChild(span);
+            playerListEl.appendChild(li);
+          });
+        } else {
+          const li = document.createElement("li");
+          li.className = "muted";
+          li.textContent = "No players online";
+          playerListEl.appendChild(li);
+        }
+      } catch (err) {
+        statusBadge.textContent = "OFFLINE";
+        statusBadge.className = "badge offline";
+        pingEl.textContent = "—";
+        versionEl.textContent = "—";
+        playersCountEl.textContent = "0 / 0";
+        playerListEl.innerHTML =
+          '<li class="muted">Unable to fetch player list</li>';
+      }
+    }
+
+    fetchStatus();
+    setInterval(fetchStatus, 30000);
   </script>
-
-  <!-- ✅ Adsterra Ad Code START -->
-  <script type='text/javascript' src='https://www.profitableratecpm.com/qrrrhdcvr1?key=7e379c82b75666edc1e6b98bfb545466'></script>
-  <!-- ✅ Adsterra Ad Code END -->
-
 </body>
 </html>
