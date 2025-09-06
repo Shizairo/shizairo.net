@@ -1,199 +1,171 @@
-<!doctype html>
+<<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Shizairo Network • Live Server Status</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Shizairo Network — Live Status</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 <style>
-  /* Reset */
+  :root{
+    --bg:#03060a;
+    --card:rgba(10,12,14,0.68);
+    --accent1:#00ffd5; /* cyan */
+    --accent2:#39ff7a; /* green */
+    --muted:rgba(255,255,255,0.6);
+  }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{
-    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    background:#000; color:#eaf2ff; -webkit-font-smoothing:antialiased;
-    display:flex; align-items:center; justify-content:center; padding:40px;
-  }
+  html,body{height:100%;width:100%;font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:#eaf6ff}
+  /* background */
+  .bg{position:fixed;inset:0;z-index:-2;overflow:hidden}
+  video.bgvid{width:100%;height:100%;object-fit:cover;filter:brightness(0.36) saturate(0.95)}
+  .overlay{position:fixed;inset:0;background:linear-gradient(180deg,#00000066,#000000d6);z-index:-1}
 
-  /* background video */
-  .bg-wrap{position:fixed;inset:0;z-index:-3;overflow:hidden}
-  video.bg-video{width:100%;height:100%;object-fit:cover;filter:brightness(0.38) saturate(0.95);}
+  /* center card */
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+  .card{width:100%;max-width:900px;border-radius:14px;padding:22px;background:var(--card);backdrop-filter:blur(10px) saturate(120%);box-shadow:0 20px 60px rgba(0,0,0,0.7);border:1px solid rgba(255,255,255,0.03)}
+  
+  /* header */
+  .head{display:flex;align-items:center;gap:14px}
+  .logobox{width:64px;height:64px;border-radius:12px;padding:8px;background:linear-gradient(135deg,var(--accent1),#9b7bff);display:flex;align-items:center;justify-content:center;flex:0 0 64px}
+  .title{font-weight:800;font-size:22px;line-height:1}
+  .subtitle{font-size:13px;color:var(--muted);margin-top:4px}
+  .badge{margin-left:auto;padding:8px 14px;border-radius:999px;font-weight:700}
 
-  /* fallback overlay */
-  .bg-fallback{position:fixed;inset:0;background:linear-gradient(180deg,#00000066,#000000aa);z-index:-2}
+  .online{background:rgba(57,255,122,0.08);color:var(--accent2);border:1px solid rgba(57,255,122,0.08)}
+  .offline{background:rgba(255,100,100,0.06);color:#ff7b7b;border:1px solid rgba(255,100,100,0.06)}
 
-  /* container */
-  .card{
-    width:100%; max-width:820px; border-radius:16px;
-    background:linear-gradient(180deg, rgba(18,22,28,0.75), rgba(8,10,14,0.65));
-    border:1px solid rgba(255,255,255,0.04);
-    backdrop-filter: blur(10px) saturate(120%); box-shadow:0 20px 50px rgba(0,0,0,0.6);
-    padding:22px;
-    overflow:hidden;
-  }
+  /* main grid */
+  .grid{display:grid;grid-template-columns:1fr 260px;gap:18px;margin-top:16px;align-items:start}
+  @media(max-width:880px){ .grid{grid-template-columns:1fr} .badge{margin:10px 0 0 auto} }
 
-  /* header / logo */
-  .card-head{display:flex;align-items:center;gap:14px}
-  .logo-wrap{display:flex;align-items:center;gap:12px}
-  .logo-svg{width:60px;height:60px;flex:0 0 60px;border-radius:10px;padding:6px;background:linear-gradient(160deg,#0ff,#f0f);box-shadow:0 6px 20px rgba(0,255,255,0.08) inset}
-  .site-title{font-weight:800;font-size:20px;letter-spacing:0.4px;background:linear-gradient(90deg,#c7f9ff,#ffb3ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .status-badge{margin-left:auto;font-weight:700;padding:8px 14px;border-radius:999px;font-size:13px}
+  /* server info box */
+  .box{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+  .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .muted{color:var(--muted);font-size:13px}
+  .big{font-weight:800}
 
-  .status-online{background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.08)}
-  .status-off{background:rgba(239,68,68,0.10);color:#ef4444;border:1px solid rgba(239,68,68,0.06)}
+  .motd{margin-top:8px;padding:10px;border-radius:8px;background:linear-gradient(90deg,rgba(255,255,255,0.01),rgba(255,255,255,0.02));color:#dfefff;font-size:14px}
 
-  /* grid info */
-  .grid{
-    margin-top:14px;display:grid;grid-template-columns: 1fr 220px;gap:18px;align-items:start;
-  }
+  /* players */
+  .players-title{margin-top:14px;color:var(--accent1);font-weight:700}
+  .players{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:10px}
+  .player{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
+  .player img{width:36px;height:36px;border-radius:6px;flex:0 0 36px}
+  .pname{font-weight:700}
 
-  .left {
-    padding-right:6px;
-  }
-  .server-box{
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);
-  }
+  /* right column actions */
+  .actions{display:flex;flex-direction:column;gap:12px}
+  .btn-join{background:linear-gradient(90deg,var(--accent1),#8e62ff);padding:12px;border-radius:10px;color:#001;font-weight:800;text-decoration:none;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,0.45)}
+  .btn-discord{display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;border-radius:10px;background:rgba(88,101,242,0.12);color:#fff;text-decoration:none;font-weight:800}
+  .smallbox{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);font-size:13px;color:var(--muted)}
 
-  .server-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:14px}
-  .server-row small{color:rgba(255,255,255,0.55);display:block}
-
-  .version {font-weight:700;color:#ffd1f0}
-
-  .motd{
-    margin-top:10px;padding:10px;border-radius:8px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    font-size:14px;color:#dcecff
-  }
-
-  /* players list */
-  .players-title{margin-top:14px;color:#bfefff;font-weight:700}
-  .players-grid{
-    margin-top:10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;
-  }
-  .player{
-    display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)
-  }
-  .player img{width:36px;height:36px;border-radius:6px;flex:0 0 36px;border:1px solid rgba(0,0,0,0.5)}
-  .player .name{font-weight:600;color:#fff;font-size:14px}
-  .player .meta{font-size:12px;color:rgba(255,255,255,0.6)}
-
-  /* right column - quick actions */
-  .right{display:flex;flex-direction:column;gap:12px}
-  .join-btn{display:block;text-align:center;padding:12px;border-radius:10px;background:linear-gradient(90deg,#3CA8FF,#9C6CFF);color:#fff;font-weight:700;text-decoration:none;box-shadow:0 8px 30px rgba(60,168,255,0.12)}
-  .discord{display:flex;gap:8px;align-items:center;justify-content:center;padding:10px;border-radius:8px;background:rgba(88,101,242,0.12);color:#eaf2ff;text-decoration:none;font-weight:700}
-  .muted{color:rgba(255,255,255,0.55);font-size:13px}
-
-  /* responsive */
-  @media(max-width:820px){ .grid{grid-template-columns:1fr} .status-badge{margin-left:0} .right{order:2} .left{order:1} }
+  /* footer tips */
+  .tips{margin-top:12px;color:var(--muted);font-size:13px}
 </style>
 </head>
 <body>
-
-  <!-- Background -->
-  <div class="bg-wrap" aria-hidden="true">
-    <!-- Use local background.mp4 or remote URL, place your preferred mp4 here -->
-    <video class="bg-video" autoplay muted loop playsinline preload="auto">
+  <!-- background: local file preferred -->
+  <div class="bg">
+    <video class="bgvid" autoplay muted loop playsinline preload="auto">
       <source src="background.mp4" type="video/mp4">
-      <!-- fallback remote video (if local missing) -->
+      <!-- fallback remote (keep but local is better) -->
       <source src="https://cdn.coverr.co/videos/coverr-gaming-lobby-9020/1080p.mp4" type="video/mp4">
     </video>
   </div>
-  <div class="bg-fallback" aria-hidden="true"></div>
+  <div class="overlay"></div>
 
-  <div class="card" role="region" aria-label="Server status">
-    <div class="card-head">
-      <!-- LOGO (SVG) - always visible and sharp -->
-      <div class="logo-wrap">
-        <div class="logo-svg" aria-hidden="true">
-          <!-- simple pixel-ish cube svg as logo -->
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block">
-            <rect x="2" y="2" width="20" height="20" rx="3" fill="white" opacity="0.06"/>
-            <path d="M4 7l8-4 8 4v10l-8 4L4 17V7z" fill="url(#g1)"/>
-            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00ffff"/><stop offset="1" stop-color="#ff6ffc"/></linearGradient></defs>
+  <div class="wrap">
+    <div class="card" role="region" aria-label="Shizairo Network status">
+      <div class="head">
+        <div class="logobox" aria-hidden="true">
+          <!-- SVG logo -->
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="22" height="22" rx="4" fill="url(#g)"/>
+            <path d="M4 8l8-4 8 4v8l-8 4-8-4V8z" fill="white" opacity="0.06"/>
+            <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#00ffd5"/><stop offset="1" stop-color="#39ff7a"/></linearGradient></defs>
           </svg>
         </div>
         <div>
-          <div class="site-title">Shizairo Network</div>
-          <div class="muted" style="font-size:13px">Survival • PvP • Community</div>
+          <div class="title">Shizairo Network</div>
+          <div class="subtitle">Survival • PvP • Community</div>
         </div>
+        <div id="statusBadge" class="badge online">Checking…</div>
       </div>
 
-      <div id="statusBadge" class="status-badge status-online" role="status">Checking…</div>
-    </div>
+      <div class="grid">
+        <div>
+          <div class="box">
+            <div class="row">
+              <div>
+                <div class="muted">Server IP</div>
+                <div class="big">play.shizaironet.fun:25595</div>
+              </div>
+              <div style="text-align:right">
+                <div class="muted">Ping</div>
+                <div id="ping" class="big">— ms</div>
+              </div>
+            </div>
 
-    <div class="grid">
-      <div class="left">
-        <div class="server-box">
-          <div class="server-row">
-            <div>
-              <div style="font-size:13px;color:rgba(255,255,255,0.6)">Server IP</div>
-              <div style="font-weight:800">play.shizaironet.fun:25595</div>
+            <div class="row">
+              <div>
+                <div class="muted">Players</div>
+                <div id="playersCount" class="big">0 / 0</div>
+              </div>
+              <div style="text-align:right">
+                <div class="muted">Version</div>
+                <div class="big" id="version">All Versions Supported</div>
+              </div>
             </div>
-            <div style="text-align:right">
-              <div style="font-size:13px;color:rgba(255,255,255,0.6)">Ping</div>
-              <div id="ping" style="font-weight:800">— ms</div>
-            </div>
+
+            <div id="motd" class="motd">Loading MOTD…</div>
           </div>
 
-          <div class="server-row">
-            <div>
-              <small>Players</small>
-              <div id="playersCount" style="font-weight:800">0 / 0</div>
-            </div>
-            <div style="text-align:right">
-              <small>Version</small>
-              <div class="version">All Versions Supported</div>
-            </div>
+          <div class="players-title">Online Players</div>
+          <div id="playerList" class="players" aria-live="polite" style="margin-top:8px">
+            <div class="smallbox">Fetching players…</div>
           </div>
-
-          <div class="motd" id="motd">Loading MOTD…</div>
         </div>
 
-        <div class="players-title">Online Players</div>
-        <div class="players-grid" id="playerList" style="margin-top:8px">
-          <div class="muted" style="padding:18px">Fetching players…</div>
-        </div>
-      </div>
-
-      <div class="right">
-        <a class="join-btn" href="minecraft://play.shizaironet.fun:25595">Join Server</a>
-        <a class="discord" href="https://discord.gg/9TWn34gNJ6" target="_blank" rel="noopener">
-          <i class="fab fa-discord" style="font-size:18px"></i>
-          <span>Discord • Join Community</span>
-        </a>
-        <div class="server-box" style="padding:12px;text-align:left">
-          <div style="font-weight:700;margin-bottom:6px">Quick Tips</div>
-          <div class="muted" style="font-size:13px;line-height:1.4">
-            • If avatars repeat, clear cache or check CORS on mc-heads. <br>
-            • Use a local background.mp4 for best performance. <br>
-            • Refresh every 10s (auto).
+        <div class="actions">
+          <a class="btn-join" href="minecraft://play.shizaironet.fun:25595">Join Server</a>
+          <a class="btn-discord" href="https://discord.gg/9TWn34gNJ6" target="_blank" rel="noopener">
+            <i class="fab fa-discord" style="font-size:18px"></i> Join Discord
+          </a>
+          <div class="smallbox">
+            <strong>Quick:</strong>
+            <div style="margin-top:6px">If players don't show, use server-side query or enable Bungee/Query on host. Local background.mp4 recommended.</div>
           </div>
         </div>
       </div>
+
+      <div class="tips">Tip: host this page on same domain as your server or use a small server-side proxy to reliably show player names/skins.</div>
     </div>
   </div>
 
 <script>
-  // CONFIG
   const SERVER = "play.shizaironet.fun:25595";
-  const FETCH_INTERVAL = 10000; // 10s
-
+  const FETCH_MS = 9000; // refresh every 9s
   const statusBadge = document.getElementById('statusBadge');
   const pingEl = document.getElementById('ping');
   const playersCountEl = document.getElementById('playersCount');
   const playerList = document.getElementById('playerList');
   const motdEl = document.getElementById('motd');
+  const versionEl = document.getElementById('version');
 
-  // utility: safe text
-  function textSafe(s){ return String(s||'').replace(/[\u0000-\u001f]/g,''); }
-
-  // Build avatar URL. mc-heads or minotar sometimes block CORS, so we use mc-heads (works widely)
-  function avatarUrl(name,size=64){
-    // add small cache-buster per-name to avoid browser caching weirdness that caused duplicates previously
-    return `https://mc-heads.net/avatar/${encodeURIComponent(name)}/${size}?t=${hashCode(name)}`;
+  // avatar URL with small cache buster per name (prevents repeats)
+  function avatarFor(name, size=64){
+    const id = Math.abs(hash(name)).toString(36).substr(0,6);
+    return `https://crafatar.com/avatars/${encodeURIComponent(name)}?size=${size}&overlay&cache=${id}`;
   }
-  function hashCode(str){
-    let h=0; for(let i=0;i<str.length;i++){h=(h<<5)-h+str.charCodeAt(i); h|=0;} return Math.abs(h);
+  function hash(s){ let h=0; for(let i=0;i<s.length;i++){h=(h<<5)-h + s.charCodeAt(i); h |= 0;} return h; }
+
+  function setOfflineUI(){
+    statusBadge.textContent = "OFFLINE";
+    statusBadge.className = "badge offline";
+    pingEl.textContent = "—";
+    playersCountEl.textContent = "0 / 0";
+    motdEl.textContent = "Unable to fetch server info";
+    playerList.innerHTML = '<div class="smallbox">Cannot fetch players — API or query disabled.</div>';
   }
 
   async function fetchStatus(){
@@ -203,85 +175,68 @@
       const t1 = performance.now();
       const data = await res.json();
 
-      // ping
-      const ping = Math.max(1, Math.round(t1 - t0));
-      pingEl.textContent = ping + " ms";
+      // ping estimation
+      const pingMs = Math.max(1, Math.round(t1 - t0));
+      pingEl.textContent = pingMs + " ms";
 
       // online / offline
-      if(data && data.online){
+      if (data && data.online){
         statusBadge.textContent = "ONLINE";
-        statusBadge.className = 'status-badge status-online';
+        statusBadge.className = "badge online";
       } else {
-        statusBadge.textContent = "OFFLINE";
-        statusBadge.className = 'status-badge status-off';
+        setOfflineUI();
+        return;
       }
 
-      // players
-      const online = data?.players?.online || 0;
-      const max = data?.players?.max || 0;
-      playersCountEl.textContent = `${online} / ${max}`;
+      // players count
+      const on = data.players?.online || 0;
+      const max = data.players?.max || 0;
+      playersCountEl.textContent = `${on} / ${max}`;
 
       // MOTD (clean)
       let motd = "Shizairo Network — Play & Build";
-      try{
-        if(data?.motd?.clean && Array.isArray(data.motd.clean) && data.motd.clean.length) {
-          motd = data.motd.clean.join(' ').slice(0,260);
-        } else if(typeof data?.motd?.raw === 'string') {
-          motd = data.motd.raw.slice(0,260);
-        }
-      }catch(e){}
-      motdEl.textContent = textSafe(motd);
+      if (data?.motd?.clean && Array.isArray(data.motd.clean) && data.motd.clean.length){
+        motd = data.motd.clean.join(' ').slice(0,240);
+      } else if (data?.motd?.raw){
+        motd = String(data.motd.raw).slice(0,240);
+      }
+      motdEl.textContent = motd;
 
-      // players list
+      // version (always All Versions Supported per request)
+      versionEl.textContent = "All Versions Supported";
+
+      // players list: prefer unique values
       playerList.innerHTML = '';
-      if(Array.isArray(data?.players?.list) && data.players.list.length){
-        // create unique list; avoid duplicates
+      if (Array.isArray(data.players?.list) && data.players.list.length){
         const uniq = [...new Set(data.players.list)];
-        uniq.forEach(name => {
-          const el = document.createElement('div');
-          el.className = 'player';
+        uniq.forEach(name=>{
+          const div = document.createElement('div');
+          div.className = 'player';
           const img = document.createElement('img');
           img.alt = name;
-          img.src = avatarUrl(name,64);
-          // fail-safe: if mc-heads blocked, fallback to minotar
-          img.onerror = () => {
-            img.onerror = null;
-            img.src = `https://minotar.net/avatar/${encodeURIComponent(name)}/64`;
-          };
-          const txt = document.createElement('div');
-          txt.innerHTML = `<div class="name">${escapeHtml(name)}</div><div class="meta">online</div>`;
-          el.appendChild(img);
-          el.appendChild(txt);
-          playerList.appendChild(el);
+          img.src = avatarFor(name,64);
+          img.onerror = () => { img.onerror=null; img.src=`https://minotar.net/avatar/${encodeURIComponent(name)}/64`; };
+          const wrap = document.createElement('div');
+          wrap.innerHTML = `<div class="pname">${escapeHtml(name)}</div><div class="muted">online</div>`;
+          div.appendChild(img); div.appendChild(wrap);
+          playerList.appendChild(div);
         });
       } else {
-        const empty = document.createElement('div');
-        empty.className = 'muted';
-        empty.style.padding = '12px';
-        empty.textContent = 'No players online right now';
-        playerList.appendChild(empty);
+        // players not returned by API (common). show message but keep counts.
+        playerList.innerHTML = '<div class="smallbox">Player names not available from API. To show names, enable server query or use a server-side proxy.</div>';
       }
 
-    }catch(err){
-      // network / CORS / API error
-      statusBadge.textContent = "OFFLINE";
-      statusBadge.className = 'status-badge status-off';
-      pingEl.textContent = '—';
-      playersCountEl.textContent = '0 / 0';
-      motdEl.textContent = 'Unable to fetch server info';
-      playerList.innerHTML = '<div class="muted" style="padding:12px">Cannot fetch player list — API error or CORS. Try hosting page on same domain or use a server-side proxy.</div>';
-      console.error('fetchStatus error', err);
+    }catch(e){
+      console.error('status error', e);
+      setOfflineUI();
     }
   }
 
-  // small function to escape HTML text
-  function escapeHtml(s){
-    return s.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-  }
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, ch=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 
   // initial + interval
   fetchStatus();
-  setInterval(fetchStatus, FETCH_INTERVAL);
+  setInterval(fetchStatus, FETCH_MS);
 </script>
 </body>
 </html>
