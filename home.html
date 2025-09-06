@@ -6,44 +6,50 @@
   <title>Shizairo Network | Server Status</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <style>
-    /* === Base Styling === */
+    /* === RESET === */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: "Poppins", sans-serif;
-      background: #0b1220;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    body, html { height: 100%; width: 100%; font-family: "Poppins", sans-serif; overflow: hidden; }
+
+    /* === BACKGROUND VIDEO === */
+    video.bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(0.45);
     }
 
-    /* === Status Card === */
+    /* === STATUS CARD === */
     .status-card {
-      background: #111827;
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
       padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-      text-align: center;
-      width: 95%;
       max-width: 600px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: auto;
+      margin-top: 40px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+      color: #fff;
     }
 
+    /* === TITLE === */
     .status-card h1 {
-      font-size: 28px;
-      margin-bottom: 8px;
+      font-size: 32px;
       background: linear-gradient(90deg, #00ffff, #ff00ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* === Status Badge === */
+    /* === BADGES === */
     .badge {
       display: inline-block;
-      padding: 8px 18px;
-      border-radius: 999px;
-      margin-top: 5px;
+      padding: 8px 20px;
+      border-radius: 30px;
+      margin-top: 10px;
       font-weight: bold;
       font-size: 14px;
     }
@@ -51,7 +57,7 @@
     .online { background: rgba(16, 185, 129, 0.15); color: #10b981; }
     .offline { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
 
-    /* === Server Info === */
+    /* === INFO === */
     .info {
       margin-top: 14px;
       font-size: 15px;
@@ -59,7 +65,7 @@
       justify-content: space-between;
     }
 
-    /* === Player List Section === */
+    /* === PLAYER SECTION === */
     .player-section {
       margin-top: 20px;
       text-align: left;
@@ -75,7 +81,7 @@
       list-style: none;
       padding: 0;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 10px;
     }
 
@@ -103,30 +109,62 @@
       grid-column: span 2;
       text-align: center;
     }
+
+    /* === DISCORD BUTTON === */
+    .discord-btn {
+      display: inline-block;
+      margin-top: 20px;
+      background: #5865F2;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 15px;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      transition: 0.2s ease-in-out;
+    }
+
+    .discord-btn:hover {
+      background: #4752C4;
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
+
+  <!-- BACKGROUND VIDEO -->
+  <video autoplay muted loop class="bg-video">
+    <source src="https://videos.pexels.com/video-files/3129957/3129957-uhd_2560_1440_30fps.mp4" type="video/mp4">
+  </video>
+
+  <!-- STATUS CARD -->
   <div class="status-card">
     <h1>Shizairo Network</h1>
     <div id="statusBadge" class="badge">Checking...</div>
 
-    <!-- Server Info -->
+    <!-- SERVER INFO -->
     <div class="info">
       <span>IP: <strong>play.shizaironet.fun:25595</strong></span>
       <span id="ping">— ms</span>
     </div>
     <div class="info">
       <span>Players: <span id="playersCount">0 / 0</span></span>
-      <span>Version: <span id="version">—</span></span>
+      <span>Version: <span id="version">All Versions Supported</span></span>
     </div>
 
-    <!-- Player List -->
+    <!-- PLAYER LIST -->
     <div class="player-section">
       <h3>Online Players</h3>
       <ul class="players" id="playerList">
         <li class="muted">Fetching players...</li>
       </ul>
     </div>
+
+    <!-- DISCORD BUTTON -->
+    <a href="https://discord.gg/9TWn34gNJ6" class="discord-btn" target="_blank">
+      <i class="fab fa-discord"></i> Join Discord
+    </a>
   </div>
 
   <script>
@@ -134,7 +172,6 @@
     const statusBadge = document.getElementById("statusBadge");
     const pingEl = document.getElementById("ping");
     const playersCountEl = document.getElementById("playersCount");
-    const versionEl = document.getElementById("version");
     const playerListEl = document.getElementById("playerList");
 
     async function fetchStatus() {
@@ -144,7 +181,7 @@
         const ms = Math.round(performance.now() - start);
         const data = await res.json();
 
-        // Set status
+        // Server Status
         if (data.online) {
           statusBadge.textContent = "ONLINE";
           statusBadge.className = "badge online";
@@ -153,25 +190,21 @@
           statusBadge.className = "badge offline";
         }
 
-        // Update info
         pingEl.textContent = ms + " ms";
-        versionEl.textContent = data.version || "—";
         const onlinePlayers = data.players?.online || 0;
         const maxPlayers = data.players?.max || 0;
         playersCountEl.textContent = `${onlinePlayers} / ${maxPlayers}`;
 
-        // Show players list
+        // Show Player List
         playerListEl.innerHTML = "";
         if (data.players?.list?.length) {
           data.players.list.forEach((name) => {
             const li = document.createElement("li");
             const img = document.createElement("img");
             img.className = "avatar";
-            img.src = `https://crafatar.com/avatars/${encodeURIComponent(name)}?size=32&overlay`;
-            img.onerror = () => {
-              img.src = "https://crafatar.com/avatars/00000000-0000-0000-0000-000000000000?size=32&overlay";
-            };
+            img.src = `https://mc-heads.net/avatar/${encodeURIComponent(name)}/32`;
             li.appendChild(img);
+
             const span = document.createElement("span");
             span.textContent = name;
             li.appendChild(span);
@@ -187,7 +220,6 @@
         statusBadge.textContent = "OFFLINE";
         statusBadge.className = "badge offline";
         pingEl.textContent = "—";
-        versionEl.textContent = "—";
         playersCountEl.textContent = "0 / 0";
         playerListEl.innerHTML = '<li class="muted">Unable to fetch player list</li>';
       }
